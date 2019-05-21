@@ -8,13 +8,18 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
 from keras.layers import Dense, Embedding, LSTM
+from keras import metrics
 from sklearn.model_selection import train_test_split
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
 stemmer = SnowballStemmer(language='english')
 
+
+from keras import backend as K
+
+
 #Import data
-file = open("spamData.txt", "r+")
+file = open("spamData_sample.txt", "r+")
 
 '''
 1. DATA PREPROCESSING
@@ -51,10 +56,10 @@ validation_samples = int(len(df) - training_samples)
 
 texts_train = texts[:training_samples]
 labels_train = labels[:training_samples]
-
+'''
 filtered_texts =[]
 
-Different preprocessing tried: 
+#Different preprocessing tried: 
     
 #remove stopwords in data
 stop_words = set(stopwords.words('english'))
@@ -73,12 +78,8 @@ for text in texts:
     sentence = sp(text)
     for word in sentence:
         filtered_texts.append(word.lemma_)
-'''    
+  
     
-    
-    
-    
-
 #Get tokens
 tokenizer = Tokenizer(oov_token=True)
 tokenizer.fit_on_texts(df['text'].values)
@@ -113,11 +114,51 @@ dropout dropper samples, hvis modellen overfittes. Jeg ved ikke hvorfor 0.2, det
 Optimizer = adam, klassisk optimizer. Lab10+yelp bruger begge denne
 Begrundelse for loss = binary https://machinelearningmastery.com/5-step-life-cycle-long-short-term-memory-models-keras/
 '''
+
+def precision(y_true, y_pred):
+    """Precision metric.
+
+    Only computes a batch-wise average of precision.
+    Computes the precision, a metric for multi-label classification of
+    how many selected items are relevant.
+    """
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))#Clip removes values not within interval {0,1]
+    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    precision = true_positives / (predicted_positives + K.epsilon()) # epsilon is used for never divisions by 0
+    
+    return precision
+
+def recall(y_true, y_pred):
+    """Recall metric.
+
+    Only computes a batch-wise average of precision.
+    Computes the precision, a metric for multi-label classification of
+    how many selected items are relevant.
+    """
+
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))#Clip removes values not within interval {0,1]
+    actual_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    recall = true_positives / (actual_positives + K.epsilon()) # epsilon is used for never divisions by 0
+
+    return recall 
+
+def f1(y_true, y_pred):
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))#Clip removes values not within interval {0,1]
+    predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+    precision = true_positives / (predicted_positives + K.epsilon()) 
+    
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))#Clip removes values not within interval {0,1]
+    actual_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    recall = true_positives / (actual_positives + K.epsilon()) # epsilon is used for never divisions by 0
+    
+    f1 = 2*(precision*recall)/(precision+recall)
+    return f1
+
 model = Sequential()
 model.add(Embedding(vocabulary_size, embed_dim,input_length = max_sequence))#, dropout = 0.2))
 model.add(LSTM(lstm_out, dropout = 0.2))
-model.add(Dense(2,activation='hard_sigmoid'))
-model.compile(loss = 'binary_crossentropy', optimizer='adam',metrics = ['accuracy'])
+model.add(Dense(2,activation='sigmoid'))
+model.compile(loss = 'binary_crossentropy', optimizer='adam',metrics = ['accuracy', precision, recall])#model.compile(loss = 'binary_crossentropy', optimizer='adam',metrics = ['accuracy'])
 print(model.summary())
 
 #FEED ACTUAL DATA TO MODEL
@@ -129,17 +170,25 @@ results = model.fit(
     Y_train,
     batch_size =batch_size,
     epochs = 1, #antal gange hele træningsdatasættet gennemløbes
-    verbose = 2,
+#    verbose = 2,
 #    validation_data=(X_valid, Y_valid)
 )
 results.history
 
-score,acc = model.evaluate(X_valid, Y_valid)#, verbose = 2)#, batch_size = batch_size)
-print("Score: %.2f" % (score))
-print("Validation Accuracy: %.2f" % (acc))
+eval = model.evaluate(X_valid, Y_valid)#, verbose = 2)#, batch_size = batch_size)
+#print("Score: %.2f" % (score))
+#print("Validation Accuracy: %.2f" % (acc))
 
-X_pred = X_train[:20]
 
-# 5. make predictions
-predictions = model.predict(X_pred, verbose=0)
-#print(predictions[:, 0])
+from sklearn.metrics import confusion_matrix
+
+# Predicting the Test set results
+y_pred = model.predict(X_train)
+
+
+# Creating the Confusion Matrix
+from sklearn.metrics import confusion_matrix
+
+#from ONE (One hot encodings) to one vector of labels 
+cm = confusion_matrix(Y_train.values.argmax(axis=1), y_pred.argmax(axis=1))
+cm = confusion_matrix(Y_train.values.argmax(axis=1), y_pred.argmax(axis=1))
