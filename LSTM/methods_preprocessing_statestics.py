@@ -42,9 +42,6 @@ validation_samples = int(len(df) - training_samples)
 texts_train = texts[:training_samples]
 labels_train = labels[:training_samples]
 
-
-
-
 ''' STATISTICAL PREPROCESSING '''
 ''' THE FOLLOWING METHODS CAN BE USED
 find_longest_word()
@@ -55,7 +52,8 @@ find_unknown_words()
 find_length_of_text()
 find_no_of_words()'''
 
-df_extra_features = df
+
+df_extra_features = df # new dataframe with extra features
 
 ''' FIND LONGEST WORD '''
 
@@ -205,3 +203,7 @@ def find_no_of_words():
         df_extra_features.loc[row_counter, 'word_counter'] = word_counter
         row_counter = row_counter + 1
 
+def generate_statistical_insigts():
+    print("stat info")
+    # find median
+    # find mean
