@@ -9,6 +9,10 @@ stemmer = SnowballStemmer(language='english')
 # nltk.download('punkt') # todo: only needs to run ones
 import os
 from symspellpy.symspellpy import SymSpell, Verbosity  # import symspell module
+import numpy as np
+import scipy
+from scipy import stats
+import matplotlib.pyplot as plt
 
 # Import data
 file = open("spamData.txt", "r+")
@@ -59,6 +63,7 @@ df_extra_features = df # new dataframe with extra features
 
 def find_longest_word():
     df_extra_features['longest_word'] = '0'
+    df_extra_features["longest_word"] = pd.to_numeric(df_extra_features["longest_word"])
     row_counter = 0
     for text in df_extra_features['text']:
         def find_longest_word(word_list):
@@ -83,6 +88,7 @@ def find_longest_word():
 def find_digits_sum():
     row_counter = 0
     df_extra_features['sum_of_digits'] = '0'
+    df_extra_features["sum_of_digits"] = pd.to_numeric(df_extra_features["sum_of_digits"])
 
     for text in df_extra_features['text']:
         digits_in_text = sum(c.isdigit() for c in text)
@@ -93,6 +99,7 @@ def find_digits_sum():
 ''' FIND SUM OF SPECIAL CHARACTERS'''
 def find_special_char_sum():
     df_extra_features['sum_of_special_char'] = '0'
+    df_extra_features["sum_of_special_char"] = pd.to_numeric(df_extra_features["sum_of_special_char"])
     row_counter = 0
     for text in df_extra_features['text']:
         only_specials = re.sub('[^\^&*$!?,.%()+#-]', '', text)  # todo: solution for now is to manualy tell it what characters to look for
@@ -139,6 +146,7 @@ def find_uppercase():
 def find_unknown_words():
     # todo: egennavne skal optimalt set ikke med her!!
     df_extra_features['no_of_unknown_words'] = 0
+    df_extra_features["no_of_unknown_words"] = pd.to_numeric(df_extra_features["no_of_unknown_words"])
 
     # maximum edit distance per dictionary precalculation # todo: not understanding
     max_edit_distance_dictionary = 3
@@ -178,6 +186,7 @@ def find_unknown_words():
 
 def find_length_of_text(with_space = True):
     df_extra_features['length_of_text'] = 0
+    df_extra_features["length_of_text"] = pd.to_numeric(df_extra_features["length_of_text"])
     row_counter = 0
 
     for text in df_extra_features['text']:
@@ -191,6 +200,7 @@ def find_length_of_text(with_space = True):
 
 def find_no_of_words():
     df_extra_features['no_of_words'] = 0
+    df_extra_features["no_of_words"] = pd.to_numeric(df_extra_features["no_of_words"])
     row_counter = 0
 
     for text in df_extra_features['text']:
@@ -203,7 +213,69 @@ def find_no_of_words():
         df_extra_features.loc[row_counter, 'word_counter'] = word_counter
         row_counter = row_counter + 1
 
-def generate_statistical_insigts():
-    print("stat info")
-    # find median
+def get_stats(ham_column, spam_column):
     # find mean
+    print("HAM")
+    mean = np.mean(ham_column)
+    print("mean: " + str(mean))
+    median = np.median(ham_column)
+    print("median: " + str(median))
+    mode = scipy.stats.mode(ham_column)
+    print("mode: " + str(mode))
+    maximum = max(ham_column)
+    minimum = min(ham_column)
+    midrange = (maximum + minimum) / 2
+    print("midrange: " + str(midrange))
+    Q1 = np.percentile(ham_column, 25)
+    Q3 = np.percentile(ham_column, 75)
+    print("Q1: " + str(Q1) + ", Q3: " + str(Q3))
+    print("five number summary: " + "median: " + str(median) + ", 1st Quartile: " + str(Q1) + " , 3rd Quartile: " + str(
+        Q3) + ", min: " + str(minimum) + ", max: " + str(maximum))
+
+    print("SPAM")
+    mean = np.mean(spam_column)
+    print("mean: " + str(mean))
+    median = np.median(spam_column)
+    print("median: " + str(median))
+    mode = scipy.stats.mode(spam_column)
+    print("mode: " + str(mode))
+    maximum = max(spam_column)
+    minimum = min(spam_column)
+    midrange = (maximum + minimum) / 2
+    print("midrange: " + str(midrange))
+    Q1 = np.percentile(spam_column, 25)
+    Q3 = np.percentile(spam_column, 75)
+    print("Q1: " + str(Q1) + ", Q3: " + str(Q3))
+    print("five number summary: " + "median: " + str(median) + ", 1st Quartile: " + str(Q1) + " , 3rd Quartile: " + str(
+        Q3) + ", min: " + str(minimum) + ", max: " + str(maximum))
+
+def generate_statistical_insigts():
+    print("*** stat info ***")
+    row_counter = 0
+    #df_ham = []
+
+    # divede into ham and spam
+    df_ham = df_extra_features.loc[df_extra_features['label'] == 'ham']
+    df_spam = df_extra_features.loc[df_extra_features['label'] == 'spam']
+    df_ham.drop(columns=['text']) # no need in stat info
+    df_spam.drop(columns=['text'])
+
+    '''longest word'''
+    spam_longest_word_column = np.asarray(df_spam['longest_word'])
+    ham_longest_word_column = np.asarray(df_ham['longest_word'])
+    # get_stats(ham_column, spam_column) gets stats method
+    # ham_longest_word_column = ham_longest_word_column.astype('int32') used if we boxplot of np array
+
+
+    df_spam_sample = df_spam[:50]
+    df_ham.boxplot()
+    plt.show()
+
+find_longest_word()
+find_digits_sum()
+find_special_char_sum()
+find_uppercase()
+find_unknown_words()
+find_length_of_text()
+find_no_of_words()
+generate_statistical_insigts()
