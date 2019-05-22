@@ -42,7 +42,18 @@ validation_samples = int(len(df) - training_samples)
 texts_train = texts[:training_samples]
 labels_train = labels[:training_samples]
 
+
+
+
 ''' STATISTICAL PREPROCESSING '''
+''' THE FOLLOWING METHODS CAN BE USED
+find_longest_word()
+find_digits_sum()
+find_special_char_sum()
+find_uppercase()
+find_unknown_words()
+find_length_of_text()
+find_no_of_words()'''
 
 df_extra_features = df
 
@@ -86,8 +97,8 @@ def find_special_char_sum():
     df_extra_features['sum_of_special_char'] = '0'
     row_counter = 0
     for text in df_extra_features['text']:
-        without_specials = re.sub('[^\^&*$!?,.%()+#-]', '', text)  # todo: solution for now is to manualy tell it what characters to look for
-        df_extra_features.loc[row_counter, 'sum_of_special_char'] = len(without_specials)
+        only_specials = re.sub('[^\^&*$!?,.%()+#-]', '', text)  # todo: solution for now is to manualy tell it what characters to look for
+        df_extra_features.loc[row_counter, 'sum_of_special_char'] = len(only_specials)
         row_counter = row_counter + 1
 
 '''FIND IF STRING CONTAINS UPPERCASE WORDS'''
@@ -130,13 +141,15 @@ def find_uppercase():
 def find_unknown_words():
     # todo: egennavne skal optimalt set ikke med her!!
     df_extra_features['no_of_unknown_words'] = 0
+
     # maximum edit distance per dictionary precalculation # todo: not understanding
     max_edit_distance_dictionary = 3
-    prefix_length = 7
+    prefix_length = 7 # unknown
 
     sym_spell = SymSpell(max_edit_distance_dictionary, prefix_length)  # create symspell object
+
     # load dictionary
-    dictionary_path = os.path.join(os.path.dirname('C:/users/najam/PycharmProjects/dataScienceGamesCourse/'),
+    dictionary_path = os.path.join(os.path.dirname('C:/Users/najam/PycharmProjects/dataScienceGamesCourse/Data-Science-for-Games-Spring-2019/LSTM/'),
                                    "frequency_dictionary_en_82_765.txt") # todo: update path or make general
 
     term_index = 0  # column of the term in the dictionary text file
