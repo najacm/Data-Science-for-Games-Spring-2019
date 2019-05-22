@@ -210,7 +210,7 @@ def find_no_of_words():
         tokens = word_tokenize(text)
         for token in tokens:
             word_counter = word_counter + 1
-        df_extra_features.loc[row_counter, 'word_counter'] = word_counter
+        df_extra_features.loc[row_counter, 'no_of_words'] = word_counter
         row_counter = row_counter + 1
 
 def get_stats(ham_column, spam_column):
@@ -254,28 +254,35 @@ def generate_statistical_insigts():
     row_counter = 0
     #df_ham = []
 
+    df_extra_features['has_upper_case'].replace(True, 1)
+    df_extra_features['has_upper_case'].replace(False, 0)
+    df_extra_features["has_upper_case"] = pd.to_numeric(df_extra_features["has_upper_case"])
+
     # divede into ham and spam
     df_ham = df_extra_features.loc[df_extra_features['label'] == 'ham']
     df_spam = df_extra_features.loc[df_extra_features['label'] == 'spam']
     df_ham.drop(columns=['text']) # no need in stat info
     df_spam.drop(columns=['text'])
 
+
     '''longest word'''
-    spam_longest_word_column = np.asarray(df_spam['longest_word'])
-    ham_longest_word_column = np.asarray(df_ham['longest_word'])
-    # get_stats(ham_column, spam_column) gets stats method
+    spam_column_to_check = np.asarray(df_spam['has_upper_case'])
+    ham_column_to_check = np.asarray(df_ham['has_upper_case'])
+    get_stats(ham_column_to_check, spam_column_to_check) #gets stats method
     # ham_longest_word_column = ham_longest_word_column.astype('int32') used if we boxplot of np array
 
-
+    print("spam: ", len(df_spam))
+    print("ham: ", len(df_ham))
     df_spam_sample = df_spam[:50]
-    df_ham.boxplot()
-    plt.show()
+    #df_ham.boxplot()
+    #plt.show()
 
-find_longest_word()
-find_digits_sum()
-find_special_char_sum()
-find_uppercase()
-find_unknown_words()
-find_length_of_text()
-find_no_of_words()
-generate_statistical_insigts()
+def run_desribtive_stats_methods():
+    find_longest_word()
+    find_digits_sum()
+    find_special_char_sum()
+    find_uppercase()
+    find_unknown_words()
+    find_length_of_text()
+    find_no_of_words()
+    generate_statistical_insigts()
