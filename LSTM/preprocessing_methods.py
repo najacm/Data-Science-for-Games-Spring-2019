@@ -13,6 +13,7 @@ import numpy as np
 import scipy
 from scipy import stats
 import matplotlib.pyplot as plt
+from sklearn import preprocessing
 
 # Import data
 file = open("spamData.txt", "r+")
@@ -180,6 +181,7 @@ def find_unknown_words():
                 for word in results_lookup:
                     if word.distance > 0:
                         no_of_unknown_words = no_of_unknown_words + 1
+                        # token = word.term
 
         df_extra_features.loc[row_counter, 'no_of_unknown_words'] = no_of_unknown_words
         row_counter = row_counter + 1
@@ -249,20 +251,32 @@ def get_stats(ham_column, spam_column):
     print("five number summary: " + "median: " + str(median) + ", 1st Quartile: " + str(Q1) + " , 3rd Quartile: " + str(
         Q3) + ", min: " + str(minimum) + ", max: " + str(maximum))
 
+def create_meta_data_df(df):
+    print("1: ", df.loc[10])
+    # normalize
+    x = df[['no_of_words', 'no_of_unknown_words','length_of_text','sum_of_special_char','sum_of_digits','longest_word']].values  # returns a numpy array
+    min_max_scaler = preprocessing.MinMaxScaler()
+    x_scaled = min_max_scaler.fit_transform(x)
+    df[['no_of_words', 'no_of_unknown_words','length_of_text','sum_of_special_char','sum_of_digits','longest_word']] = pd.DataFrame(x_scaled)
+
+    meta_df = df[['label','no_of_words', 'no_of_unknown_words', 'length_of_text', 'sum_of_special_char', 'sum_of_digits', 'longest_word', 'has_upper_case']]
+    print("2: ", meta_df.loc[10])
+    #df to csv
+    meta_df.to_csv(r'C:\Users\najam\PycharmProjects\dataScienceGamesCourse\Data-Science-for-Games-Spring-2019\LSTM\metadata.csv')
+
 def generate_statistical_insigts():
     print("*** stat info ***")
-    row_counter = 0
-    #df_ham = []
 
     df_extra_features['has_upper_case'].replace(True, 1)
     df_extra_features['has_upper_case'].replace(False, 0)
     df_extra_features["has_upper_case"] = pd.to_numeric(df_extra_features["has_upper_case"])
+    df_extra_features.drop(columns=['text']) # no need in this dataframe
 
     # divede into ham and spam
     df_ham = df_extra_features.loc[df_extra_features['label'] == 'ham']
     df_spam = df_extra_features.loc[df_extra_features['label'] == 'spam']
-    df_ham.drop(columns=['text']) # no need in stat info
-    df_spam.drop(columns=['text'])
+
+    create_meta_data_df(df_extra_features)
 
 
     '''longest word'''
@@ -277,6 +291,8 @@ def generate_statistical_insigts():
     #df_ham.boxplot()
     #plt.show()
 
+
+
 def run_desribtive_stats_methods():
     find_longest_word()
     find_digits_sum()
@@ -286,3 +302,6 @@ def run_desribtive_stats_methods():
     find_length_of_text()
     find_no_of_words()
     generate_statistical_insigts()
+
+
+run_desribtive_stats_methods()
