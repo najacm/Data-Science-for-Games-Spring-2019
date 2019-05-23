@@ -3,7 +3,7 @@ import numpy as np
 import spacy
 sp =  spacy.load('en')
 import nltk 
-
+nltk.download('wordnet')
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
@@ -14,72 +14,70 @@ from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
 stemmer = SnowballStemmer(language='english')
 
+from collections import Counter
+
 
 from keras import backend as K
 
-
-#Import data
-file = open("spamData_sample.txt", "r+")
 
 '''
 1. DATA PREPROCESSING
 '''
 
-
-#dataframe of spam data 
-attr = ['label','text']
-full_df = pd.DataFrame(columns=attr)
-
-lines = file.readlines()
-
-for i in range(len(lines)):
-    splittedline = lines[i].split("\t")
-    full_df.loc[i] = splittedline
-
-#Ham or spam as binary representation
-#full_df['label'].replace('ham', 1)
-#full_df['label'].replace('spam', 0)
-labels = np.asarray(full_df['label'])
-texts = np.asarray(full_df['text'])
-
-df = full_df
-
-'''
-Splitting data into train, validation and test
-50% train, 50% validation and test. 80% is validation and 20% is test
-
-'''
-'''
-# we will use 20% of data as training atm, just to make quicker
-training_samples = int(len(df) * .2)
-validation_samples = int(len(df) - training_samples)
-
-texts_train = texts[:training_samples]
-labels_train = labels[:training_samples]
-'''
-filtered_texts =[]
-
-#Different preprocessing tried: 
+def preprocess_data():
     
-#remove stopwords in data
-stop_words = set(stopwords.words('english'))
-for w in texts: 
-    if w not in stop_words: 
-        filtered_texts.append(w)
+    #Import data
+    file = open("spamData_sample.txt", "r+")
 
-
-#Stemming in data, grouping data computing, computer, compute = comput
-for w in texts: 
-    filtered_texts.append(stemmer.stem(w))
-
-
-#Lemmatizing in data, grouping data with actual words
-for text in texts:
-    sentence = sp(text)
-    for word in sentence:
-        filtered_texts.append(word.lemma_)
-  
+    #dataframe of spam data 
+    attr = ['label','text']
+    raw_data = pd.DataFrame(columns=attr)
     
+    lines = file.readlines()
+    
+    for i in range(len(lines)):
+        splittedline = lines[i].split("\t")
+        raw_data.loc[i] = splittedline
+    
+    #Ham or spam as binary representation
+    #full_df['label'].replace('ham', 1)
+    #full_df['label'].replace('spam', 0)
+#    labels = np.asarray(raw_data['label'])
+#   texts = np.asarray(raw_data['text'])
+    return raw_data    
+
+
+df = preprocess_data()
+
+
+def remove_stopwords(df):
+    #remove stopwords in data
+    stop_words = set(stopwords.words('english'))
+    df['text_no_stopword'] = df['text'].apply(lambda x: ' '.join([item for item in x.split() if item not in stop_words]))
+    return df
+
+def stem_data(df):
+    
+    #Stemming in data, grouping data computing, computer, compute = comput
+    for w in df['text']: 
+        filtered_texts.append(stemmer.stem(w))    
+    return filtered_texts
+
+
+def lemmatize_text(text):
+    w_tokenizer = nltk.tokenize.WhitespaceTokenizer()
+    lemmatizer = nltk.stem.WordNetLemmatizer()
+    return [lemmatizer.lemmatize(w) for w in w_tokenizer.tokenize(text)]
+
+df['text_lemmatized'] = df.text.apply(lemmatize_text)
+
+def get_most_common_words(df,label,no_of_words):
+    counter = Counter()
+    c =Counter(" ".join(full_df[label]).split()).most_common(no_of_words) 
+    return c
+
+
+
 #Get tokens
 tokenizer = Tokenizer(oov_token=True)
 tokenizer.fit_on_texts(df['text'].values)
@@ -159,7 +157,7 @@ model.add(Embedding(vocabulary_size, embed_dim,input_length = max_sequence))#, d
 model.add(LSTM(lstm_out, dropout = 0.2))
 model.add(Dense(2,activation='sigmoid'))
 model.compile(loss = 'binary_crossentropy', optimizer='adam',metrics = ['accuracy', precision, recall])#model.compile(loss = 'binary_crossentropy', optimizer='adam',metrics = ['accuracy'])
-print(model.summary())
+print(model.summary())  
 
 #FEED ACTUAL DATA TO MODEL
 Y = pd.get_dummies(df['label'].values)
