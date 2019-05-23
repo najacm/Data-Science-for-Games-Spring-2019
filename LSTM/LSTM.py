@@ -85,8 +85,6 @@ tokenizer.fit_on_texts(df['text'].values)
 all_seq_as_indices = tokenizer.texts_to_sequences(df['text'])
 X = pad_sequences(all_seq_as_indices)
 
-
-
 '''
 Fit_on_texts henter alle ord i alle beskeder, giver et index. 
 texts_to_sequences opdeler alle beskeder i deres index i stedet i ord. nye ord får 
