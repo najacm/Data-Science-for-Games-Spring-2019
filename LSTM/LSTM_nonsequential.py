@@ -1,7 +1,11 @@
 import pandas as pd
 import csv
+import numpy as np
 from keras.layers import Input, Embedding, LSTM, Dense, concatenate
 from keras.models import Model
+from keras.preprocessing.sequence import pad_sequences
+from keras import backend as K
+
 from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 
@@ -61,54 +65,45 @@ def f1(y_true, y_pred):
     f1 = 2*(precision*recall)/(precision+recall)
     return f1
 
+
+
+def train_valid_split(nlp_df, meta_df):
+    no_of_samples = len(nlp_df)
+    labels = np.asarray(nlp_df['label'])
+    texts = np.asarray(nlp_df['text'])
+    meta = np.asarray(meta_df[['longest_word','no_of_words','length_of_text','sum_of_special_char','sum_of_digits','has_upper_case']])
+    
+    np.random.seed(42)
+    indices = np.arange(no_of_samples)
+    np.random.shuffle(indices)
+    
+    train_size = int(0.5 * no_of_samples)
+    valid_size = int(no_of_samples - train_size)
+    
+    
+    texts = texts[indices]
+    toke = Tokenizer(oov_token=True)
+    toke.fit_on_texts(texts)
+    texts_as_indices = tokenizer.texts_to_sequences(texts)
+    padded_texts_as_indices = pad_sequences(texts_as_indices)
+    X_nlp_train = padded_texts_as_indices[:train_size]
+    X_nlp_valid = padded_texts_as_indices[train_size:]
+    
+    meta = meta[indices]
+    X_meta_train = meta[:train_size]
+    X_meta_valid = meta[train_size:]
+    
+    labels = labels[indices]
+    labels_as_OHE = pd.get_dummies(labels)
+    Y_train = labels_as_OHE[:train_size]
+    Y_valid = labels_as_OHE[train_size:]
+
+    return X_nlp_train, X_nlp_valid, X_meta_train, X_meta_valid, Y_train, Y_valid
+
+
 meta_df = read_meta_data()
 nlp_df = read_nlp_data()
-
-
-
-meta_X = np.asarray(meta_df[['longest_word','no_of_words','length_of_text','sum_of_special_char','sum_of_digits','has_upper_case']])   
-meta_Y = pd.get_dummies(meta_df['label'].values)
-meta_X_train, meta_X_valid, meta_Y_train, meta_Y_valid = train_test_split(meta_X,meta_Y, test_size = 0.50, random_state = 36)
-
-tokenizer = Tokenizer(oov_token=True)
-tokenizer.fit_on_texts(nlp_df['text'].values)
-all_seq_as_indices = tokenizer.texts_to_sequences(nlp_df['text'])
-nlp_X = pad_sequences(all_seq_as_indices)
-nlp_Y = pd.get_dummies(nlp_df['label'].values)
-nlp_X_train, nlp_X_valid, nlp_Y_train, nlp_Y_valid = train_test_split(nlp_X,nlp_Y, test_size = 0.50, random_state = 36)
-
-
-'''
-texts = np.asarray(nlp_dlf['text'].shape)
-labels = np.asarray(labels)
-
-np.random.seed(42)
-indices = np.arange(data.shape[0])
-np.random.shuffle(indices)
-
-texts = texts[indices]
-labels = labels[indices]
-training_samples = int(5572 * .8)
-validation_samples = int(5572 - training_samples)
-texts_train = texts[:training_samples]
-y_train = labels[:training_samples]
-texts_test = texts[training_samples:]
-y_test = labels[training_samples:]
-
-
-
-
-'''
-
-
-
-
-
-
-
-
-
-
+X_nlp_train, X_nlp_valid, X_meta_train, X_meta_valid, Y_train, Y_valid = train_valid_split(nlp_df, meta_df)
 
 
 
@@ -130,8 +125,5 @@ main_output = Dense(2, activation='sigmoid', name='main_output')(x)
 model = Model(inputs=[nlp_input, meta_input], outputs=[main_output, meta_output])
 model.compile(optimizer='rmsprop', loss='binary_crossentropy',metrics = ['accuracy', precision, recall, f1], loss_weights=[1., 0.2])
 
-#meta_model.compile(optimizer='adam',loss = 'binary_crossentropy', metrics = ['accuracy', precision, recall, f1])#model.compile(loss = 'binary_crossentropy', optimizer='adam',metrics = ['accuracy'])
-
-#model.fit([headline_data, additional_data], [labels, labels], epochs=50, batch_size=32)
-model.fit([nlp_X_train, meta_X_train], [nlp_Y_train, meta_Y_train], epochs=1, batch_size=32)
+model.fit([X_nlp_train, X_meta_train], [Y_train, Y_train], epochs=1, batch_size=32)
 
