@@ -254,17 +254,19 @@ def get_stats(ham_column, spam_column):
 def create_meta_data_df(df):
     print("1: ", df.loc[10])
     # normalize
-    x = df[['no_of_words', 'no_of_unknown_words','length_of_text','sum_of_special_char','sum_of_digits','longest_word']].values  # returns a numpy array
+    #x = df[['no_of_words', 'no_of_unknown_words','length_of_text','sum_of_special_char','sum_of_digits','longest_word']].values  # returns a numpy array
+    x = df[['no_of_words', 'length_of_text','sum_of_digits','longest_word']]
     min_max_scaler = preprocessing.MinMaxScaler()
     x_scaled = min_max_scaler.fit_transform(x)
-    df[['no_of_words', 'no_of_unknown_words','length_of_text','sum_of_special_char','sum_of_digits','longest_word']] = pd.DataFrame(x_scaled)
-
-    meta_df = df[['label','no_of_words', 'no_of_unknown_words', 'length_of_text', 'sum_of_special_char', 'sum_of_digits', 'longest_word', 'has_upper_case']]
+    #df[['no_of_words', 'no_of_unknown_words','length_of_text','sum_of_special_char','sum_of_digits','longest_word']] = pd.DataFrame(x_scaled)
+    #df[['no_of_words', 'length_of_text', 'sum_of_digits', 'longest_word']] = pd.DataFrame(x_scaled)
+    #meta_df = df[['label','no_of_words', 'no_of_unknown_words', 'length_of_text', 'sum_of_special_char', 'sum_of_digits', 'longest_word', 'has_upper_case']]
+    meta_df = df[['no_of_words', 'length_of_text', 'sum_of_digits', 'longest_word']]
     print("2: ", meta_df.loc[10])
     #df to csv
-    meta_df.to_csv(r'C:\Users\najam\PycharmProjects\dataScienceGamesCourse\Data-Science-for-Games-Spring-2019\LSTM\metadata.csv')
+    meta_df.to_csv(r'C:\Users\najam\PycharmProjects\dataScienceGamesCourse\Data-Science-for-Games-Spring-2019\LSTM\metadata_actual.csv')
 
-def generate_statistical_insigts():
+def generate_statistical_insigts(feature):
     print("*** stat info ***")
 
     df_extra_features['has_upper_case'].replace(True, 1)
@@ -278,10 +280,9 @@ def generate_statistical_insigts():
 
     create_meta_data_df(df_extra_features)
 
-
     '''longest word'''
-    spam_column_to_check = np.asarray(df_spam['has_upper_case'])
-    ham_column_to_check = np.asarray(df_ham['has_upper_case'])
+    spam_column_to_check = np.asarray(df_spam[feature])
+    ham_column_to_check = np.asarray(df_ham[feature])
     get_stats(ham_column_to_check, spam_column_to_check) #gets stats method
     # ham_longest_word_column = ham_longest_word_column.astype('int32') used if we boxplot of np array
 
@@ -301,7 +302,7 @@ def run_desribtive_stats_methods():
     find_unknown_words()
     find_length_of_text()
     find_no_of_words()
-    generate_statistical_insigts()
+    generate_statistical_insigts("has_upper_case")
 
 
 run_desribtive_stats_methods()
