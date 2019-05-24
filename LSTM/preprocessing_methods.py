@@ -261,7 +261,7 @@ def create_meta_data_df(df):
     #df[['no_of_words', 'no_of_unknown_words','length_of_text','sum_of_special_char','sum_of_digits','longest_word']] = pd.DataFrame(x_scaled)
     #df[['no_of_words', 'length_of_text', 'sum_of_digits', 'longest_word']] = pd.DataFrame(x_scaled)
     #meta_df = df[['label','no_of_words', 'no_of_unknown_words', 'length_of_text', 'sum_of_special_char', 'sum_of_digits', 'longest_word', 'has_upper_case']]
-    meta_df = df[['label','no_of_words', 'length_of_text', 'sum_of_digits', 'longest_word']]
+    meta_df = df[['label','no_of_words', 'no_of_unknown_words', 'length_of_text', 'sum_of_special_char', 'sum_of_digits', 'longest_word', 'has_upper_case']]
     print("2: ", meta_df.loc[10])
     #df to csv
     meta_df.to_csv(r'C:\Users\najam\PycharmProjects\dataScienceGamesCourse\Data-Science-for-Games-Spring-2019\LSTM\metadata_actual.csv')
