@@ -234,14 +234,13 @@ Usage</th>
 </thead>
 <tbody>
 	<tr>
-		<td>SIARD_1&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;</td>
+		<td>SIARD_1</td>
 		<td>&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;</td>
 		<td>There **MUST** be&lt;br&gt;minimum one&lt;br&gt;representation and&lt;br&gt;therefore minimum&lt;br&gt;one Package&lt;br&gt;METS.xml and&lt;br&gt;minimum one&lt;br&gt;Representation&lt;br&gt;METS.xml in a CITS&lt;br&gt;SIARD package.</td>
 		<td>1..1&lt;br&gt;&lt;br&gt;MUST&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;</td>
 	</tr>
 </tbody>
 </table>
-
 
 
 
