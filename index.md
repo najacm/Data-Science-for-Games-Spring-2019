@@ -1,4 +1,3 @@
-https://jekyllrb.com/docs/configuration/markdown/?fbclid=IwAR0M7wANqDQ_NNpVWHtxYWUn7xiJIBJD3UobFtK1Isi8cy9CXoY9AaL1FVw
 
 ## 1 Preface
 
