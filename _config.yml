@@ -1,12 +1,6 @@
 plugins:
-  - jekyll-relative-links
   - jekyll-spaceship
-relative_links:
-  enabled: true
-  collections: true
 include:
   - index.md
-redcarpet:
-extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "strikethrough", "superscript", "with_toc_data", "tables", "hard_wrap", "lax_spacing"]
   
 theme: jekyll-theme-cayman
