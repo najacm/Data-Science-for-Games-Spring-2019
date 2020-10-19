@@ -1,6 +1,63 @@
 
 ## 1 Preface
 
+
+<table>
+<thead>
+	<tr>
+		<th>ID</th>
+		<th></th>
+		<th></th>
+		<th></th>
+	</tr>
+</thead>
+<tbody>
+	<tr>
+		<td>SIARD_2Ref CSIP2</td>
+		<td>Typemets/\@TYPE</td>
+		<td>Forinformationpackages thatprimarilycontainrelationaldatabases thevalue inPackagemets/\@TYPE**MUST** be&quot;Databases&quot; astaken from theCSIPVocabulary for[ContentCategory](about:blank).</td>
+		<td>1..1MUST</td>
+	</tr>
+	<tr>
+		<td>SIARD_3Ref CSIP4</td>
+		<td>ContentInformationTypeSpecificationmets/\@csip:CONTENTINFORMATIONTYPE</td>
+		<td>Forinformationpackages thatprimarilycontainrelationaldatabases thevalue inPackagemets/\@csip:CONTENTINFORMATIONTYPE**MUST** be&quot;CITS_SIARD&quot;as taken fromthe CSIPVocabulary for[ContentInformationType](about:blank).</td>
+		<td>1..1MUST</td>
+	</tr>
+	<tr>
+		<td>SIARD_4Ref CSIP5</td>
+		<td>Other ContentInformationTypeSpecificationmets/\@csip:OTHERCONTENTINFORMATIONTYPE</td>
+		<td>Forinformationpackages thatprimarilycontainrelationaldatabases thePackage METSmust **NOT**have amets/\@csip:OTHERCONTENTINFORMATIONTYPE</td>
+		<td>0..0NOT</td>
+	</tr>
+	<tr>
+		<td>SIARD_5Ref CSIP6</td>
+		<td>METS Profilemets/\@PROFILE</td>
+		<td>Forinformationpackages thatprimarilycontainrelationaldatabases thevalue in the\@PROFILE**MUST** be\&quot;https://SIARD.dilcis.eu/profile/CITS_SIARD.xml\&quot;</td>
+		<td>1..1MUST</td>
+	</tr>
+	<tr>
+		<td>SIARD_6Ref CSIP62</td>
+		<td>fileSecRepresentationContentInformationTypeSpecificationmets/fileSec/fileGrp\[\@USE=\&#39;Representations\&#39;\]/\@csip:CONTENTINFORMATIONTYPE</td>
+		<td>There **MUST**be a minimumof onemets/fileSec/fileGrp\[\@USE=\&#39;Representations\&#39;\]/\@csip:CONTENTINFORMATIONTYPEwith the value&quot;CITS_SIARD&quot;as taken fromthe CSIPVocabulary for[ContentInformationType](about:blank)that direct totherepresentationMETS.xml intherepresentationcontaining arelationaldatabase.</td>
+		<td>1..nMUST</td>
+	</tr>
+	<tr>
+		<td>SIARD_7Ref CSIP63</td>
+		<td>fileSec OtherContentInformationTypeSpecificationmets/fileSec/fileGrp\[\@csip:CONTENTINFORMATIONTYPE=\&#39;CITS_SIARD\&#39;\]/\@csip:OTHERCONTENTINFORMATIONTYPE</td>
+		<td>For anymets/fileSec/fileGrp\[\@csip:CONTENTINFORMATIONTYPEwith the value&quot;CITS_SIARD&quot;there **MUST**be a\@csip:OTHERCONTENTINFORMATIONTYPEattribute witha value takenfrom thevocabulary{SIARD_1.0;SIARD_2.0,SIARD_2.1,Database_dump}.</td>
+		<td>1..1MUST</td>
+	</tr>
+	<tr>
+		<td>SIARD_8RefCSIP105-CSIP112</td>
+		<td>StructMap METSpointer</td>
+		<td>For anyfileGrp/\@csip:CONTENTINFORMATIONTYPEwith the value&quot;CITS_SIARD&quot;there **MUST**be acorresponding\@div-representationin theStructMap-element</td>
+		<td>1..1MUST</td>
+	</tr>
+</tbody>
+</table>
+
+
 ### 1.1 Aim of the specification
 
 This E-ARK specification is part of a family of specifications that provide a common set of requirements for packaging digital information. These specifications are based on common, international standards for transmitting, describing and preserving digital data. They have been produced to help data creators, software developers and digital archives tackle the challenge of short-, medium- and long-term data management and reuse in a sustainable, authentic, cost-efficient, manageable and interoperable way. 
