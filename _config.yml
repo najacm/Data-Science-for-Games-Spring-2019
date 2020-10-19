@@ -1,11 +1,12 @@
 plugins:
   - jekyll-relative-links
   - redcarpet
+  - jekyll-redcarpet
 relative_links:
   enabled: true
   collections: true
 redcarpet:
-    extensions: ["no_intra_emphasis", "tables", "autolink", "strikethrough", "with_toc_data", "hard_wrap", "lax_spacing"]
+    extensions: ["tables"]
 include:
   - index.md
   
