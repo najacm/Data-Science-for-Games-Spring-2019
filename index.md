@@ -1,14 +1,15 @@
 
 ## 1 Preface
 
-
 <table>
 <thead>
 	<tr>
 		<th>ID</th>
-		<th></th>
-		<th></th>
-		<th></th>
+		<th>Name and
+Location</th>
+		<th>Description
+and Usage</th>
+		<th>Card &amp; Level</th>
 	</tr>
 </thead>
 <tbody>
