@@ -221,30 +221,27 @@ There can be several DIP representations.  There can also be other databases and
 As for this specification there always needs to be a minimum of one representation and therefore a minimum of two METS.xml. The Package METS.xml has to be a general METS.xml describing if the package itself is mainly a CITS_SIARD package, and then the single representations need to describe what specific SIARD versions they consist of. 
 
 
+
 <table>
-  <tr>
-   <td>ID
-   </td>
-   <td>Name and Location 
-   </td>
-   <td colspan="2" >Description and Usage
-   </td>
-   <td>Card & Level
-   </td>
-  </tr>
-  <tr>
-   <td>SIARD_1
-   </td>
-   <td colspan="2" >
-   </td>
-   <td>There <strong>MUST </strong>be minimum one representation and therefore minimum one Package METS.xml and minimum one Representation METS.xml in a CITS SIARD package.
-   </td>
-   <td>1..1
-<p>
-      MUST
-   </td>
-  </tr>
+<thead>
+	<tr>
+		<th>ID</th>
+		<th>Name and Location</th>
+		<th>Description and
+Usage</th>
+		<th>Card &amp; Level</th>
+	</tr>
+</thead>
+<tbody>
+	<tr>
+		<td>SIARD_1&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;</td>
+		<td>&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;</td>
+		<td>There **MUST** be&lt;br&gt;minimum one&lt;br&gt;representation and&lt;br&gt;therefore minimum&lt;br&gt;one Package&lt;br&gt;METS.xml and&lt;br&gt;minimum one&lt;br&gt;Representation&lt;br&gt;METS.xml in a CITS&lt;br&gt;SIARD package.</td>
+		<td>1..1&lt;br&gt;&lt;br&gt;MUST&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;</td>
+	</tr>
+</tbody>
 </table>
+
 
 
 
