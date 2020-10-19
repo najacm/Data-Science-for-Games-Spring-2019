@@ -13,6 +13,147 @@ The foundation for these specifications is the Reference Model for an Open Archi
    
   **The E-ARK specification dependency hierarchy**
  
+ 
+ +----------------+----------------+----------------+--------------+
+| ID             | Name and       | Description    | Card & Level |
+|                | Location       | and Usage      |              |
++================+================+================+==============+
+| SIARD_2        | Type           | For            | 1..1         |
+|                |                | information    |              |
+| Ref CSIP2      | mets/\@TYPE    | packages that  | MUST         |
+|                |                | primarily      |              |
+|                |                | contain        |              |
+|                |                | relational     |              |
+|                |                | databases the  |              |
+|                |                | value in       |              |
+|                |                | Package        |              |
+|                |                | mets/\@TYPE    |              |
+|                |                | **MUST** be    |              |
+|                |                | "Databases" as |              |
+|                |                | taken from the |              |
+|                |                | CSIP           |              |
+|                |                | Vocabulary for |              |
+|                |                | [Content       |              |
+|                |                | Category]      |              |
+|                |                | (about:blank). |              |
++----------------+----------------+----------------+--------------+
+| SIARD_3        | Content        | For            | 1..1         |
+|                | Information    | information    |              |
+| Ref CSIP4      | Type           | packages that  | MUST         |
+|                | Specification  | primarily      |              |
+|                |                | contain        |              |
+|                | mets/\         | relational     |              |
+|                | @csip:CONTENTI | databases the  |              |
+|                | NFORMATIONTYPE | value in       |              |
+|                |                | Package        |              |
+|                |                | mets/\         |              |
+|                |                | @csip:CONTENTI |              |
+|                |                | NFORMATIONTYPE |              |
+|                |                | **MUST** be    |              |
+|                |                | "CITS_SIARD"   |              |
+|                |                | as taken from  |              |
+|                |                | the CSIP       |              |
+|                |                | Vocabulary for |              |
+|                |                | [Content       |              |
+|                |                | Information    |              |
+|                |                | Type]          |              |
+|                |                | (about:blank). |              |
++----------------+----------------+----------------+--------------+
+| SIARD_4        | Other Content  | For            | 0..0         |
+|                | Information    | information    |              |
+| Ref CSIP5      | Type           | packages that  | NOT          |
+|                | Specification  | primarily      |              |
+|                |                | contain        |              |
+|                | mets/\@csip    | relational     |              |
+|                | :OTHERCONTENTI | databases the  |              |
+|                | NFORMATIONTYPE | Package METS   |              |
+|                |                | must **NOT**   |              |
+|                |                | have a         |              |
+|                |                | mets/\@csip    |              |
+|                |                | :OTHERCONTENTI |              |
+|                |                | NFORMATIONTYPE |              |
++----------------+----------------+----------------+--------------+
+| SIARD_5        | METS Profile   | For            | 1..1         |
+|                |                | information    |              |
+| Ref CSIP6      | mets/\@PROFILE | packages that  | MUST         |
+|                |                | primarily      |              |
+|                |                | contain        |              |
+|                |                | relational     |              |
+|                |                | databases the  |              |
+|                |                | value in the   |              |
+|                |                | \@PROFILE      |              |
+|                |                | **MUST** be    |              |
+|                |                | \"https:       |              |
+|                |                | //SIARD.dilcis |              |
+|                |                | .eu/profile/CI |              |
+|                |                | TS_SIARD.xml\" |              |
++----------------+----------------+----------------+--------------+
+| SIARD_6        | fileSec        | There **MUST** | 1..n         |
+|                | Representation | be a minimum   |              |
+| Ref CSIP62     | Content        | of one         | MUST         |
+|                | Information    | mets/file      |              |
+|                | Type           | Sec/fileGrp\[\ |              |
+|                | Specification  | @USE=\'Represe |              |
+|                |                | ntations\'\]/\ |              |
+|                | mets/file      | @csip:CONTENTI |              |
+|                | Sec/fileGrp\[\ | NFORMATIONTYPE |              |
+|                | @USE=\'Represe | with the value |              |
+|                | ntations\'\]/\ | "CITS_SIARD"   |              |
+|                | @csip:CONTENTI | as taken from  |              |
+|                | NFORMATIONTYPE | the CSIP       |              |
+|                |                | Vocabulary for |              |
+|                |                | [Content       |              |
+|                |                | Information    |              |
+|                |                | Type           |              |
+|                |                | ](about:blank) |              |
+|                |                | that direct to |              |
+|                |                | the            |              |
+|                |                | representation |              |
+|                |                | METS.xml in    |              |
+|                |                | the            |              |
+|                |                | representation |              |
+|                |                | containing a   |              |
+|                |                | relational     |              |
+|                |                | database.      |              |
++----------------+----------------+----------------+--------------+
+| SIARD_7        | fileSec Other  | For any        | 1..1         |
+|                | Content        | mets/file      |              |
+| Ref CSIP63     | Information    | Sec/fileGrp\[\ | MUST         |
+|                | Type           | @csip:CONTENTI |              |
+|                | Specification  | NFORMATIONTYPE |              |
+|                |                | with the value |              |
+|                | mets/fileSec   | "CITS_SIARD"   |              |
+|                | /fileGrp\[\@cs | there **MUST** |              |
+|                | ip:CONTENTINFO | be a           |              |
+|                | RMATIONTYPE=\' | \@csip         |              |
+|                | CITS_SIARD     | :OTHERCONTENTI |              |
+|                | \'\]/\@csip    | NFORMATIONTYPE |              |
+|                | :OTHERCONTENTI | attribute with |              |
+|                | NFORMATIONTYPE | a value taken  |              |
+|                |                | from the       |              |
+|                |                | vocabulary     |              |
+|                |                | {SIARD_1.0;    |              |
+|                |                | SIARD_2.0,     |              |
+|                |                | SIARD_2.1,     |              |
+|                |                | D              |              |
+|                |                | atabase_dump}. |              |
++----------------+----------------+----------------+--------------+
+| SIARD_8        | StructMap METS | For any        | 1..1         |
+|                | pointer        | fileGrp/\      |              |
+| Ref            |                | @csip:CONTENTI | MUST         |
+| C              |                | NFORMATIONTYPE |              |
+| SIP105-CSIP112 |                | with the value |              |
+|                |                | "CITS_SIARD"   |              |
+|                |                | there **MUST** |              |
+|                |                | be a           |              |
+|                |                | corresponding  |              |
+|                |                | \@div-         |              |
+|                |                | representation |              |
+|                |                | in the         |              |
+|                |                | Str            |              |
+|                |                | uctMap-element |              |
++----------------+----------------+----------------+--------------+
+ 
 <table>
 <thead>
 <tr class="header">
