@@ -1,7 +1,5 @@
 plugins:
   - jekyll-relative-links
-  - redcarpet
-  - jekyll-redcarpet
 relative_links:
   enabled: true
   collections: true
